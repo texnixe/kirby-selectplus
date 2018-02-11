@@ -4,10 +4,10 @@ class SelectplusField extends BaseField {
 
   static public $fieldname = 'selectplus';
 
-  public $locationName;
-  public $locationStreet;
-  public $locationPlace;
+
   public $formfields;
+  public $parent;
+  public $template;
 
   static public $assets = array(
     'js' => array(
@@ -26,7 +26,12 @@ class SelectplusField extends BaseField {
     $this->icon    = 'chevron-down';
 
   }
-
+  public function getTemplate() {
+    if(!$this->template) {
+      $this->template = 'default';
+    }
+    return $this->template;
+  }
   public function options() {
     return FieldOptions::build($this);
   }
@@ -117,7 +122,7 @@ class SelectplusField extends BaseField {
     $wrapper->addClass('field-selectplus');
     $wrapper->attr('data-field', 'selectplus');
     foreach($this->formfields() as $k => $v) {
-          $wrapper->append($this->inputFormField($v));
+      $wrapper->append($this->inputFormField($k, $v['placeholder']));
     }
 
     $wrapper->append($this->saveButton());
@@ -157,7 +162,7 @@ class SelectplusField extends BaseField {
     return $saveButtonContainer;
   }
 
-  private function inputFormField($name) {
+  private function inputFormField($name, $placeholder) {
     # Wrapper
     $content = new Brick('div');
     $content->addClass('field-'.$name);
@@ -165,7 +170,7 @@ class SelectplusField extends BaseField {
     $input = new Brick('input');
     $input->attr('name', $name);
     $input->addClass('input '.$name);
-    $input->attr('placeholder', $name);
+    $input->attr('placeholder', $placeholder);
 
 
     # Combine & Ship It
@@ -190,13 +195,13 @@ class SelectplusField extends BaseField {
     $page = page($parent);
 
     // get page data
-    $title = esc($data['location_name']);
+    $title = esc(array_values($data)[0]);
 
 
 
     try {
 
-      $newPage = $page->children()->create(str::slug($title), 'location', $data);
+      $newPage = $page->children()->create(str::slug($title), $this->getTemplate(), $data);
 
 
       // trigger panel.page.create event
@@ -229,7 +234,7 @@ class SelectplusField extends BaseField {
         'method' => 'POST',
         'action'  => function() {
           $data = kirby()->request()->data();
-          $response = $this->createPage($data, 'veranstaltungsorte');
+          $response = $this->createPage($data, $this->parent);
 
           return json_encode($response);
 
