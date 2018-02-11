@@ -1,0 +1,18 @@
+.add-location-button {
+  position: absolute;
+  top: 0;
+  cursor: pointer;
+}
+.field-selectplus div:not(.input-with-selectbox) {
+  //display:none;
+  margin: 0.3rem 0;
+}
+
+
+.input-save {
+  text-align: center;
+  padding: 1rem 0 0 0;
+}
+.field-selectplus.active div {
+  display: block;
+}
