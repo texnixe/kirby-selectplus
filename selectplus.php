@@ -193,6 +193,7 @@ class SelectplusField extends BaseField {
 
     $site = kirby()->site();
     $page = page($parent);
+    $data = array_slice($data, 0, count($data)-2);
 
     // get page data
     $title = esc(array_values($data)[0]);
