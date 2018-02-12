@@ -1,0 +1,12 @@
+{
+  "name": "selectplus",
+  "version": "0.6.0",
+  "description": "Kirby Selectplus",
+  "license": "MIT",
+  "author": "Sonja Broda (https://github.com/texnixe)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/texnixe/kirby-selectplus"
+  },
+  "type": "kirby-plugin"
+}
