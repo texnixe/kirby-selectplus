@@ -18,6 +18,8 @@ class SelectplusField extends BaseField {
     )
   );
 
+
+
   public function __construct() {
     $this->type = 'selectplus';
     $this->label = $this->label();
@@ -105,6 +107,7 @@ class SelectplusField extends BaseField {
     $outer = new Brick('div');
     $outer->addClass('field-content');
     $outer->append($wrapper);
+    $outer->append(parent::icon());
     return $outer;
 
   }
@@ -153,7 +156,7 @@ class SelectplusField extends BaseField {
     # Button
     $saveButton = new Brick('input');
     $saveButton->attr('type', 'button');
-    $saveButton->val(l::get('fields.add.locate', 'Save'));
+    $saveButton->val(l::get('fields.add.locate', 'OK'));
     $saveButton->addClass('btn btn-rounded save-button');
 
     # Combine & Ship It
