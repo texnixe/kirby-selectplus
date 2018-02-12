@@ -19,7 +19,7 @@
 
 
       container.on('click', '.save-button', function(e) {
-        //check if the title field is empty
+        //check if the first field is empty
         var fields = container.find('input');
         var uid = container.find('input').first().val();
 
@@ -55,18 +55,18 @@
       data: data,
       dataType: "json",
       success: function(response) {
-        console.log('successo');
         if(response.class == 'error') {
+
           container.show().html(response.message).addClass(response.class);
         }
 
         if(response.class == 'success') {
+
           container.show().html(response.message).addClass(response.class);
-          container.hide();
+
           setTimeout(function () {
               window.location.reload();
-          }, 1000);
-
+          }, 500);
         }
       }
     });

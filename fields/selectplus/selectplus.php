@@ -209,7 +209,7 @@ class SelectplusField extends BaseField {
       kirby()->trigger('panel.page.create', $newPage);
 
       $response = array(
-        'message' => 'The new page was created. ',
+        'message' => 'The new page was created. This page will reload shortly',
         'class' => 'success'
       );
 
