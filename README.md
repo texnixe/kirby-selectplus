@@ -5,6 +5,10 @@ Under development. In general, this seems to work, but has some glitches when a 
 Special use case Kirby select field with button that allows you to create new subpages as options "on the fly".
 
 
+## Todo
+
+- message styling
+
 ## Use in blueprint:
 
 ```

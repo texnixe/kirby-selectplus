@@ -16,7 +16,9 @@
 
 
       container.on('click', '.save-button', function(e) {
-        //check if the first field is empty
+
+        container.removeClass('error');
+        $('.error-message').remove();
         var fields = container.find('input');
         var uid = container.find('input').first().val();
 
@@ -45,7 +47,7 @@
 
     var data = item;
     $.ajax({
-      //contentType: "application/json; charset=utf-8",
+      contentType: "application/json; charset=utf-8",
       url: baseURL + '/selectplus',
       type: 'POST',
       data: data,
@@ -53,12 +55,13 @@
       success: function(response) {
         if(response.class == 'error') {
 
-          container.html(response.message).addClass(response.class);
+          container.prepend('<span class="error-message">'+response.message+'</span>').addClass(response.class);
         }
 
         if(response.class == 'success') {
 
           container.html(response.message).addClass(response.class);
+
           setTimeout(function () {
               container.hide();
           }, 1500);
