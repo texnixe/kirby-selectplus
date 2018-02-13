@@ -138,8 +138,9 @@ class SelectplusField extends BaseField {
     $wrapper->addClass('field-selectplus');
     $wrapper->attr('data-field', 'selectplus');
 
+    // loop through the form fields
     foreach($this->formfields() as $k => $v) {
-      $wrapper->append($this->inputFormField($k, $v['placeholder']));
+      $wrapper->append($this->inputFormField($k, $v));
     }
 
     $wrapper->append($this->saveButton());
@@ -178,20 +179,30 @@ class SelectplusField extends BaseField {
     return $saveButtonContainer;
   }
 
-  private function inputFormField($name, $placeholder) {
-    # Wrapper
-    $content = new Brick('div');
-    $content->addClass('field-'.$name);
+  private function inputFormField($name, $fieldvalues = []) {
+    $content = null;
+    if(is_array($fieldvalues)) {
+      isset($fieldvalues['required'])? $required = $fieldvalues['required']: $required = false;
+      isset($fieldvalues['label'])? $label = $fieldvalues['label']: $label = '&nbsp;';
+      isset($fieldvalues['placeholder'])? $placeholder = $fieldvalues['placeholder']: $placeholder = '';
+      # Wrapper
+      $content = new Brick('div');
+      $content->addClass('field-'.$name);
+      $label = new Brick('label', $label, ['class' => 'label', 'for' => $name]);
+      if($required) {
+        $label->append(new Brick('abbr', '*',['title' => 'Required']));
+      }
+      $input = new Brick('input');
+      $input->attr('name', $name);
+      $input->attr('required', $required);
+      $input->addClass('input '.$name);
+      $input->attr('placeholder', $placeholder);
 
-    $input = new Brick('input');
-    $input->attr('name', $name);
-    $input->addClass('input '.$name);
-    $input->attr('placeholder', $placeholder);
 
-
-    # Combine & Ship It
-    $content->append($input);
-
+      # Combine & Ship It
+      $content->append($label);
+      $content->append($input);
+    }
     return $content;
   }
 

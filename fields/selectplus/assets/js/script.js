@@ -60,11 +60,11 @@
 
         if(response.class == 'success') {
 
-          container.html(response.message).addClass(response.class);
+          //container.before(response.message);//.addClass(response.class);
 
           setTimeout(function () {
               container.hide();
-          }, 1500);
+          }, 0);
           selectWithAdd.show();
           selectbox.append('<option value="'+response.uid+'" selected>'+response.title +'</option>');
 
