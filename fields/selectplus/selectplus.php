@@ -117,7 +117,7 @@ class SelectplusField extends BaseField {
     $field = new Brick('div');
     $field->append($this->input());
     $field->attr('data-fieldname', $this->name());
-    $field->attr('data-base', url());
+    $field->attr('data-base', u());
 
     $field->addClass('select-with-add');
 
@@ -130,19 +130,18 @@ class SelectplusField extends BaseField {
 
     $wrapper->append($this->saveButton());
 
-    # Add each
 
     $field->append($wrapper);
-    # Concatenate & Return
+
     return $field;
   }
 
   private function addButton () {
-    # Wrapper
+
     $addButtonContainer = new Brick('a');
-    $addButtonContainer->append('<i class="icon icon-left fa fa-plus-circle"></i>');
+    $addButtonContainer->append(new Brick('i', ['class' => 'icon icon-left fa fa-plus-circle']));
     $addButtonContainer->addClass('add-page-button label-option');
-    $addButtonContainer->append('Hinzufügen');
+    $addButtonContainer->append(l('fields.structure.add'));
 
     return $addButtonContainer;
   }
@@ -156,7 +155,7 @@ class SelectplusField extends BaseField {
     # Button
     $saveButton = new Brick('input');
     $saveButton->attr('type', 'button');
-    $saveButton->val(l::get('fields.add.locate', 'OK'));
+    $saveButton->val(l::get('fields.add.locate', $this->translation('selectplus.save')));
     $saveButton->addClass('btn btn-rounded save-button');
 
     # Combine & Ship It
@@ -212,7 +211,7 @@ class SelectplusField extends BaseField {
       kirby()->trigger('panel.page.create', $newPage);
 
       $response = array(
-        'message' => 'The new option was created and can now be selected',
+        'message' => $this->translation('success.message'),
         'class' => 'success',
         'title' => $title,
         'uid' => $newPage->uid()
@@ -229,6 +228,27 @@ class SelectplusField extends BaseField {
 
 
     return $response;
+  }
+  function translation($string) {
+
+    $translation = c::get('selectplus.translation', false);
+
+    if(!$translation) {
+      $translations = require __DIR__ . DS . 'translations.php';
+      $language = c::get('panel.language', 'en');
+
+      if (! array_key_exists($language, $translations)) {
+        $language = 'en';
+      }
+
+      $translation = $translations[$language];
+    }
+
+    if(array_key_exists($string, $translation)) {
+      $string = $translation[$string];
+    }
+
+    return $string;
   }
 
   public function validate() {
