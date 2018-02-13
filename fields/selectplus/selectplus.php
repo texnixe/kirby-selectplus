@@ -212,8 +212,10 @@ class SelectplusField extends BaseField {
       kirby()->trigger('panel.page.create', $newPage);
 
       $response = array(
-        'message' => 'The new page was created. This page will reload shortly',
-        'class' => 'success'
+        'message' => 'The new option was created and can now be selected',
+        'class' => 'success',
+        'title' => $title,
+        'uid' => $newPage->uid()
       );
 
     } catch(Exception $e) {
@@ -228,9 +230,11 @@ class SelectplusField extends BaseField {
 
     return $response;
   }
+
   public function validate() {
     return array_key_exists($this->value(), $this->options());
   }
+
   public function routes() {
     return array(
       array(

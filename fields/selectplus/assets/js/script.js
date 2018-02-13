@@ -6,6 +6,8 @@
       var btn = $('.add-page-button');
       var container = $('.field-selectplus');
       var selectWithAdd = $('.select-with-add').children('.field-content');
+      var selectbox = $('.select-with-add').find('select');
+      console.log(selectbox);
 
       container.hide();
 
@@ -45,6 +47,8 @@
 
     var blueprintFieldname = $('.select-with-add').data('fieldname');
     var container = $('.field-selectplus');
+    var selectWithAdd = $('.select-with-add').children('.field-content');
+    var selectbox = $('.select-with-add').find('select');
     var baseURL = window.location.href.replace(/(\/edit.*)/g, '/field') + '/' + blueprintFieldname + '/' + fieldname;
 
     var data = item;
@@ -57,16 +61,20 @@
       success: function(response) {
         if(response.class == 'error') {
 
-          container.show().html(response.message).addClass(response.class);
+          container.html(response.message).addClass(response.class);
         }
 
         if(response.class == 'success') {
 
-          container.show().html(response.message).addClass(response.class);
-
+          container.html(response.message).addClass(response.class);
           setTimeout(function () {
-              window.location.reload();
-          }, 500);
+              container.hide();
+          }, 1500);
+          selectWithAdd.show();
+          selectbox.append('<option value="'+response.uid+'" selected>'+response.title +'</option>');
+/*
+
+*/
         }
       }
     });
