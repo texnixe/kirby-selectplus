@@ -12,9 +12,7 @@
   text-align: center;
   padding: 1rem 0 0 0;
 }
-.field-selectplus.active div {
-  display: block;
-}
+
 
 .field-selectplus.success {
   box-sizing: border-box;
@@ -36,4 +34,8 @@
 
   border: 1px solid #b3000a;
 
+}
+
+.selectplus-content.hide {
+  display:none;
 }

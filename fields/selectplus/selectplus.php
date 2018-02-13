@@ -22,7 +22,6 @@ class SelectplusField extends BaseField {
 
   public function __construct() {
     $this->type = 'selectplus';
-    $this->label = $this->label();
     $this->options = array();
     $this->formfields = [];
     $this->icon    = 'chevron-down';
@@ -49,6 +48,9 @@ class SelectplusField extends BaseField {
     ));
   }
   public function label() {
+    return null;
+  }
+  public function headline() {
 
     // make sure there's at least an empty label
     if(!$this->label) {
@@ -62,6 +64,9 @@ class SelectplusField extends BaseField {
   }
 
   public function input() {
+    $outerWrapper = new Brick('div');
+    $outerWrapper->addClass('selectplus-wrapper');
+    $outerWrapper->append($this->headline());
 
     $select = new Brick('select');
     $select->addClass('selectbox');
@@ -105,25 +110,34 @@ class SelectplusField extends BaseField {
     }
 
     $outer = new Brick('div');
-    $outer->addClass('field-content');
+    $outer->addClass('field-content selectplus-content');
     $outer->append($wrapper);
     $outer->append(parent::icon());
-    return $outer;
+    $outerWrapper->append($outer);
+    return $outerWrapper;
 
   }
 
   public function content () {
 
-    $field = new Brick('div');
-    $field->append($this->input());
-    $field->attr('data-fieldname', $this->name());
-    $field->attr('data-base', u());
 
-    $field->addClass('select-with-add');
+    $field = new Brick('div', [
+      'class' => 'select-with-add',
+      'data-base' => u(),
+      'data-fieldname' => $this->name()
+    ]);
 
+    //$field->attr('data-fieldname', $this->name());
+    //$field->attr('data-base', u());
+    //$field->addClass('select-with-add');
+      $field->append($this->input());
+
+
+    // create a wrapper for the page creation fields
     $wrapper = new Brick('div');
     $wrapper->addClass('field-selectplus');
     $wrapper->attr('data-field', 'selectplus');
+
     foreach($this->formfields() as $k => $v) {
       $wrapper->append($this->inputFormField($k, $v['placeholder']));
     }

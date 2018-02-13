@@ -2,16 +2,16 @@
   $.fn.selectplus = function() {
     return this.each(function() {
       var fieldname = 'selectplus';
-      var btn = $('.add-page-button');
-      var container = $(this);
-      var selectWithAdd = $('.select-with-add').children('.field-content');
+      var addbtn = $('.add-page-button');
+      var container = $('.field-selectplus');
+      var selectWithAdd = $('.selectplus-content');
 
       container.hide();
 
-      btn.on('click', function(e) {
-        e.preventDefault();
-        selectWithAdd.toggle();
-        container.toggle();
+      addbtn.unbind('click').on('click', function(e) {
+         e.preventDefault();
+         selectWithAdd.toggle();
+         container.toggle();
       });
 
 
