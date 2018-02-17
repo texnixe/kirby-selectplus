@@ -27,18 +27,20 @@ class SelectplusField extends BaseField {
     $this->icon    = 'chevron-down';
 
   }
+
+  public function options() {
+    return FieldOptions::build($this);
+  }
+
+  public function getFormfields() {
+    return $this->formfields;
+  }
+
   public function getTemplate() {
     if(!$this->template) {
       $this->template = 'default';
     }
     return $this->template;
-  }
-  public function options() {
-    return FieldOptions::build($this);
-  }
-
-  public function formfields() {
-    return $this->formfields;
   }
 
   public function option($value, $text, $selected = false) {
@@ -64,13 +66,15 @@ class SelectplusField extends BaseField {
   }
 
   public function input() {
-    $outerWrapper = new Brick('div');
-    $outerWrapper->addClass('selectplus-wrapper');
+
+    $outerWrapper = new Brick('div', [
+      'class' => 'selectfield-wrapper'
+    ]);
     $outerWrapper->append($this->headline());
 
-    $select = new Brick('select');
-    $select->addClass('selectbox');
-    $select->attr(array(
+
+    $select = new Brick('select', [
+      'class'        => 'selectbox',
       'name'         => $this->name(),
       'id'           => $this->id(),
       'required'     => $this->required(),
@@ -78,7 +82,7 @@ class SelectplusField extends BaseField {
       'autofocus'    => $this->autofocus(),
       'readonly'     => $this->readonly(),
       'disabled'     => $this->disabled(),
-    ));
+    ]);
 
     $default = $this->default();
 
@@ -95,8 +99,10 @@ class SelectplusField extends BaseField {
     }
 
 
-    $inner = new Brick('div');
-    $inner->addClass('selectbox-wrapper');
+    $inner = new Brick('div', [
+      'class' => 'selectbox-wrapper'
+    ]);
+
     $inner->append($select);
 
     $wrapper = new Brick('div');
@@ -114,6 +120,8 @@ class SelectplusField extends BaseField {
     $outer->append($wrapper);
     $outer->append(parent::icon());
     $outerWrapper->append($outer);
+
+
     return $outerWrapper;
 
   }
@@ -122,32 +130,30 @@ class SelectplusField extends BaseField {
 
 
     $field = new Brick('div', [
-      'class' => 'select-with-add',
+      'class' => 'selectplus-field',
       'data-base' => u(),
       'data-fieldname' => $this->name()
     ]);
 
-    //$field->attr('data-fieldname', $this->name());
-    //$field->attr('data-base', u());
-    //$field->addClass('select-with-add');
-      $field->append($this->input());
-
+    $field->append($this->input());
+    $field->append(new Brick('div', ['class'=> 'selectplus-message']));
 
     // create a wrapper for the page creation fields
-    $wrapper = new Brick('div');
-    $wrapper->addClass('field-selectplus');
-    $wrapper->attr('data-field', 'selectplus');
+    $wrapper = new Brick('div', [
+      'class' => 'selectplus-formfield-wrapper',
+      'data-field' => 'selectplus'
+    ]);
 
     // loop through the form fields
-    foreach($this->formfields() as $k => $v) {
+    foreach($this->getFormfields() as $k => $v) {
       $wrapper->append($this->inputFormField($k, $v));
     }
+    //$wrapper->append();
 
     $wrapper->append($this->saveButton());
 
 
     $field->append($wrapper);
-
     return $field;
   }
 
@@ -281,8 +287,8 @@ class SelectplusField extends BaseField {
   }
 
   public function routes() {
-    return array(
-      array(
+    return [
+      [
         'pattern' => 'selectplus',
         'method' => 'POST',
         'action'  => function() {
@@ -292,8 +298,8 @@ class SelectplusField extends BaseField {
           return json_encode($response);
 
         }
-      )
-    );
+      ]
+    ];
   }
 
 }

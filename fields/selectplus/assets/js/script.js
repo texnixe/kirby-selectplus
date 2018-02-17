@@ -3,29 +3,37 @@
     return this.each(function() {
       var fieldname = 'selectplus';
       var addbtn = $('.add-page-button');
-      var container = $('.field-selectplus');
-      var selectWithAdd = $('.selectplus-content');
-
-      container.hide();
+      var fieldContainer = $('.selectplus-formfield-wrapper');
+      var selectfield = $('.selectplus-content');
+      var fields = fieldContainer.find('input').not('input[type="button"]');
+      var borderColor = fields.css('border');
 
       addbtn.unbind('click').on('click', function(e) {
          e.preventDefault();
-         selectWithAdd.toggle();
-         container.toggle();
+         selectfield.toggle();
+         fieldContainer.toggle();
       });
 
 
-      container.on('click', '.save-button', function(e) {
+      fieldContainer.on('click', '.save-button', function(e) {
+        $('.selectplus-message').html('').removeClass('error success');
+        fields.css('border', borderColor);
+        fields.next('span').remove();
+        var message = {};
+        fields.each(function(index) {
 
-        container.removeClass('error');
-        $('.error-message').remove();
-        var fields = container.find('input');
-        var uid = container.find('input').first().val();
+          if($(this).attr('required') && !$(this).val()) {
+            var label = $(this).prev().text();
+            $(this).css('border', '1px solid red');
+            $(this).after('<span class="error">Bitte ' + label + ' ausfüllen</span>');
 
-        if(uid == '') {
-          alert('The first field may not be empty');
+            message[$( this ).attr('name')] = label;
+          };
+        });
+
+        if(jQuery.isEmptyObject(message)) {
+          $.fn.ajaxSelectplus(fieldname, fields, fieldContainer, selectfield);
         }
-        $.fn.ajaxSelectplus(fieldname, fields, container, selectWithAdd);
         return false;
       });
 
@@ -34,16 +42,16 @@
   };
 
   // Ajax function
-  $.fn.ajaxSelectplus = function(fieldname, fields, container, selectWithAdd) {
-    item = {}
+  $.fn.ajaxSelectplus = function(fieldname, fields, fieldContainer, selectfield) {
+    item = {};
     fields.each(function() {
-
-     item[$( this ).attr('name')] = $(this).val();
+      item[$( this ).attr('name')] = $(this).val();
     });
 
-    var blueprintFieldname = $('.select-with-add').data('fieldname');
-    var selectbox = $('.select-with-add').find('select');
+    var blueprintFieldname = $('.selectplus-field').data('fieldname');
+    var selectbox = $('.selectplus-field').find('select');
     var baseURL = window.location.href.replace(/(\/edit.*)/g, '/field') + '/' + blueprintFieldname + '/' + fieldname;
+    var messageBox = $('.selectplus-message');
 
     var data = item;
     $.ajax({
@@ -53,20 +61,18 @@
       data: data,
       dataType: "json",
       success: function(response) {
-        if(response.class == 'error') {
-
-          container.prepend('<span class="error-message">'+response.message+'</span>').addClass(response.class);
-        }
+        messageBox.append(response.message).addClass(response.class);
 
         if(response.class == 'success') {
 
-          //container.before(response.message);//.addClass(response.class);
+          selectbox.append('<option value="'+response.uid+'" selected>'+response.title+'</option>');
 
-          setTimeout(function () {
-              container.hide();
-          }, 0);
-          selectWithAdd.show();
-          selectbox.append('<option value="'+response.uid+'" selected>'+response.title +'</option>');
+          setTimeout(function(){
+            selectfield.fadeIn(200);
+            fieldContainer.fadeOut(200);
+            messageBox.fadeOut(200).removeClass('success').html('');
+          }, 1000);
+          fields.val('');
 
         }
       }
