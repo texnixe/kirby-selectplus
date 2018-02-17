@@ -189,8 +189,8 @@ class SelectplusField extends BaseField {
     $content = null;
     if(is_array($fieldvalues)) {
       isset($fieldvalues['required'])? $required = $fieldvalues['required']: $required = false;
-      isset($fieldvalues['label'])? $label = $fieldvalues['label']: $label = '&nbsp;';
-      isset($fieldvalues['placeholder'])? $placeholder = $fieldvalues['placeholder']: $placeholder = '';
+      isset($fieldvalues['label'])? $label = i18n($fieldvalues['label']): $label = '&nbsp;';
+      isset($fieldvalues['placeholder'])? $placeholder = i18n($fieldvalues['placeholder']): $placeholder = '';
       # Wrapper
       $content = new Brick('div');
       $content->addClass('field-'.$name);
