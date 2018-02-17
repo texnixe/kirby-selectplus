@@ -7,12 +7,10 @@
   margin: 0.3rem 0;
 }
 
-
 .input-save {
   text-align: center;
   padding: 1rem 0 0 0;
 }
-
 
 .selectplus-message.success {
   box-sizing: border-box;
@@ -28,4 +26,9 @@
 }
 .selectplus-formfield-wrapper {
   display: none;
+}
+span.error {
+  display: block;
+  color: #b3000a;
+  padding: 0.2em 0;
 }

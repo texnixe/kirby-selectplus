@@ -7,31 +7,32 @@
       var selectfield = $('.selectplus-content');
       var fields = fieldContainer.find('input').not('input[type="button"]');
       var borderColor = fields.css('border');
+      var message = $('.selectplus-message');
 
       addbtn.unbind('click').on('click', function(e) {
          e.preventDefault();
+         fields.val('');
          selectfield.toggle();
          fieldContainer.toggle();
       });
 
 
-      fieldContainer.on('click', '.save-button', function(e) {
-        $('.selectplus-message').html('').removeClass('error success');
-        fields.css('border', borderColor);
-        fields.next('span').remove();
-        var message = {};
+      fieldContainer.on('click', '.save-button', function() {
+        message.html('').removeClass('error success');
+        fields.css('border', borderColor).next('span').remove();
+        var errorMessage = {};
         fields.each(function(index) {
 
           if($(this).attr('required') && !$(this).val()) {
-            var label = $(this).prev().text();
-            $(this).css('border', '1px solid red');
-            $(this).after('<span class="error">Bitte ' + label + ' ausfüllen</span>');
+            var label = $(this).prev().contents().get(0).nodeValue;
+            $(this).css('border', '2px solid #b3000a');
+            $(this).after('<span class="error">'+$(this).data('message')+'</span>');
 
-            message[$( this ).attr('name')] = label;
+            errorMessage[$( this ).attr('name')] = label;
           };
         });
 
-        if(jQuery.isEmptyObject(message)) {
+        if(jQuery.isEmptyObject(errorMessage)) {
           $.fn.ajaxSelectplus(fieldname, fields, fieldContainer, selectfield);
         }
         return false;
@@ -52,7 +53,7 @@
     var selectbox = $('.selectplus-field').find('select');
     var baseURL = window.location.href.replace(/(\/edit.*)/g, '/field') + '/' + blueprintFieldname + '/' + fieldname;
     var messageBox = $('.selectplus-message');
-
+console.log(baseURL);
     var data = item;
     $.ajax({
       contentType: "application/json; charset=utf-8",

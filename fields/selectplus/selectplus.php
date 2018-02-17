@@ -176,7 +176,7 @@ class SelectplusField extends BaseField {
     # Button
     $saveButton = new Brick('input');
     $saveButton->attr('type', 'button');
-    $saveButton->val(l::get('fields.add.locate', $this->translation('selectplus.save')));
+    $saveButton->val(l::get('fields.add.locate', $this->getMessage('selectplus.save')));
     $saveButton->addClass('btn btn-rounded save-button');
 
     # Combine & Ship It
@@ -194,19 +194,20 @@ class SelectplusField extends BaseField {
       # Wrapper
       $content = new Brick('div');
       $content->addClass('field-'.$name);
-      $label = new Brick('label', $label, ['class' => 'label', 'for' => $name]);
+      $htmlLabel = new Brick('label', $label, ['class' => 'label', 'for' => $name]);
       if($required) {
-        $label->append(new Brick('abbr', '*',['title' => 'Required']));
+        $htmlLabel->append(new Brick('abbr', '*',['title' => 'Required']));
       }
       $input = new Brick('input');
       $input->attr('name', $name);
       $input->attr('required', $required);
+      $input->attr('data-message', $this->getMessage('field.required', [$label]));
       $input->addClass('input '.$name);
       $input->attr('placeholder', $placeholder);
 
 
       # Combine & Ship It
-      $content->append($label);
+      $content->append($htmlLabel);
       $content->append($input);
     }
     return $content;
@@ -242,7 +243,7 @@ class SelectplusField extends BaseField {
       kirby()->trigger('panel.page.create', $newPage);
 
       $response = array(
-        'message' => $this->translation('success.message'),
+        'message' => $this->getMessage('success.message'),
         'class' => 'success',
         'title' => $title,
         'uid' => $newPage->uid()
@@ -260,13 +261,13 @@ class SelectplusField extends BaseField {
 
     return $response;
   }
-  function translation($string) {
+  function translate($string) {
 
     $translation = c::get('selectplus.translation', false);
+    $language = site()->user()->data()['language'];
 
     if(!$translation) {
       $translations = require __DIR__ . DS . 'translations.php';
-      $language = c::get('panel.language', 'en');
 
       if (! array_key_exists($language, $translations)) {
         $language = 'en';
@@ -280,6 +281,11 @@ class SelectplusField extends BaseField {
     }
 
     return $string;
+  }
+
+  public function getMessage($key, $params = []) {
+    array_unshift($params, $this->translate($key));
+    return sprintf(...$params);
   }
 
   public function validate() {
