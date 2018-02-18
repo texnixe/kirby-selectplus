@@ -1,8 +1,11 @@
+![GitHub release](https://img.shields.io/github/release/texnixe/kirby-selectplus.svg?maxAge=1800)![License](https://img.shields.io/github/license/mashape/apistatus.svg)
 # Kirby Selectplus Field
 
 This field adds an add button to a select field that allows you to add new options to a select field on the fly. It is only intended to work with select fields that query subpages of a given folder.
 
 Example use case: In an event page, you have a select field that allows you to select a location. Locations are stored as subpages of the locations page. It may happen that when you create a new event, the location you want to select doesn't exist yet. Usually, you would then have to go to the locations page and add a new location, then go back to your event page and select the new location. With this field, you can do this right from the event page.
+
+![](selectplus.gif)
 
 ## Installation
 
@@ -45,11 +48,20 @@ locations:
     type: selectplus
     formfields:
       title:
-        placeholder: Location Name
-      city:
-        placeholder: City
-      address
-        placeholder: Address
+        label:
+          en: Name of Event Location
+          de: Name des Veranstaltungsort
+        placeholder:
+          en: Location Name
+          de: Veranstaltungsort
+        required: true  
+      address:
+        label:
+          en: Address of Location
+          de: Adresse des Veranstaltungsortes
+        placeholder:
+          en: Address
+          de: Adresse
     parent: locations
     template: location
     width: 1/3
@@ -63,8 +75,27 @@ locations:
 
 ### Formfields option
 
-The formfield option accepts a set of fields that you want to have in your form. Currently, the first field must be the title field. Each field should also have a placeholder.
+The formfields option accepts a set of fields that you want to have in your form. For each form field, you can set a label, a placeholder and a required attribute. Each field is a standard text input field. While you can create as many fields as you want, one or two should actually be sufficient to create a new option on the fly.
 
-Todo:
+### Parent
+The name of the parent page where the options will be created. The page must exist.
 
-- add field options (required etc.)
+### Options query text
+
+The field you show as text for the select option should be a required field in your formfields options, otherwise your select field option will show an empty string, usually, this will be the title.
+
+## Disclaimer
+
+This plugin is provided "as is" with no guarantee. Use it at your own risk and always test it yourself before using it in a production environment. If you find any issues, please create a new issue.
+
+## License
+
+The Selectplus plugin is open-sourced software licensed under the [MIT license](http://www.opensource.org/licenses/mit-license.php).
+
+Copyright © 2018 Sonja Broda info@texniq.de https://www.texniq.de
+
+It is discouraged to use this plugin in any project that promotes racism, sexism, homophobia, animal abuse, violence or any other form of hate speech.
+
+## Donate
+
+If you enjoy this plugin and want to support me you can [buy me a beer](https://www.paypal.me/texnixe/5eur) :)
