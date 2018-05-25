@@ -188,7 +188,7 @@ class SelectplusField extends BaseField {
   private function inputFormField($name, $fieldvalues = []) {
     $content = null;
     if(is_array($fieldvalues)) {
-      isset($fieldvalues['required'])? $required = $fieldvalues['required']: $required = false;
+      isset($fieldvalues['required'])? $required = 'true': $required = 'false';
       isset($fieldvalues['label'])? $label = i18n($fieldvalues['label']): $label = '&nbsp;';
       isset($fieldvalues['placeholder'])? $placeholder = i18n($fieldvalues['placeholder']): $placeholder = '';
       # Wrapper
@@ -200,8 +200,9 @@ class SelectplusField extends BaseField {
       }
       $input = new Brick('input');
       $input->attr('name', $name);
-      $input->attr('required', $required);
+      $input->attr('data-required', $required);
       $input->attr('data-message', $this->getMessage('field.required', [$label]));
+      $input->attr('data-focus', 'true');
       $input->addClass('input '.$name);
       $input->attr('placeholder', $placeholder);
 

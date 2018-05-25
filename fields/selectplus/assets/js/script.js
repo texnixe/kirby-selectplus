@@ -22,9 +22,9 @@
         fields.css('border', borderColor).next('span').remove();
         var errorMessage = {};
         fields.each(function(index) {
-
-          if($(this).attr('required') && !$(this).val()) {
+          if($(this).val().length === 0 && $(this).data("required")) {
             var label = $(this).prev().contents().get(0).nodeValue;
+
             $(this).css('border', '2px solid #b3000a');
             $(this).after('<span class="error">'+$(this).data('message')+'</span>');
 
@@ -53,7 +53,7 @@
     var selectbox = $('.selectplus-field').find('select');
     var baseURL = window.location.href.replace(/(\/edit.*)/g, '/field') + '/' + blueprintFieldname + '/' + fieldname;
     var messageBox = $('.selectplus-message');
-console.log(baseURL);
+
     var data = item;
     $.ajax({
       contentType: "application/json; charset=utf-8",

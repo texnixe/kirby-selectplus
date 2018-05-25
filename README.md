@@ -88,6 +88,11 @@ The field you show as text for the select option should be a required field in y
 
 This plugin is provided "as is" with no guarantee. Use it at your own risk and always test it yourself before using it in a production environment. If you find any issues, please create a new issue.
 
+
+## Changelog
+
+1.2.0 Fixed an issue where the page could not be saved using the save button due to required fields.
+
 ## License
 
 The Selectplus plugin is open-sourced software licensed under the [MIT license](http://www.opensource.org/licenses/mit-license.php).
@@ -95,7 +100,3 @@ The Selectplus plugin is open-sourced software licensed under the [MIT license](
 Copyright © 2018 Sonja Broda info@texniq.de https://www.texniq.de
 
 It is discouraged to use this plugin in any project that promotes racism, sexism, homophobia, animal abuse, violence or any other form of hate speech.
-
-## Donate
-
-If you enjoy this plugin and want to support me you can [buy me a beer](https://www.paypal.me/texnixe/5eur) :)
