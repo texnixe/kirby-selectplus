@@ -195,7 +195,7 @@ class SelectplusField extends BaseField {
       $content = new Brick('div');
       $content->addClass('field-'.$name);
       $htmlLabel = new Brick('label', $label, ['class' => 'label', 'for' => $name]);
-      if($required) {
+      if($required === 'true') {
         $htmlLabel->append(new Brick('abbr', '*',['title' => 'Required']));
       }
       $input = new Brick('input');

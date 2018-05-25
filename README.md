@@ -1,4 +1,9 @@
 ![GitHub release](https://img.shields.io/github/release/texnixe/kirby-selectplus.svg?maxAge=1800)![License](https://img.shields.io/github/license/mashape/apistatus.svg)
+
+## Donate
+
+If you enjoy this plugin and want to support the development of this and other plugins you can [buy me a present](https://www.paypal.me/texnixe/5eur) :)
+
 # Kirby Selectplus Field
 
 This field adds an add button to a select field that allows you to add new options to a select field on the fly. It is only intended to work with select fields that query subpages of a given folder.
