@@ -8,6 +8,7 @@ class SelectplusField extends BaseField {
   public $formfields;
   public $parent;
   public $template;
+  protected $methods = ['children', 'visibleChildren', 'invisibleChildren','siblings','visibleSiblings', 'invisibleSiblings'];
 
   static public $assets = array(
     'js' => array(
@@ -29,7 +30,37 @@ class SelectplusField extends BaseField {
   }
 
   public function options() {
-    return FieldOptions::build($this);
+    $options = array();
+    if($this->options == 'query' && in_array($this->query['fetch'], $this->methods) || in_array($this->options, $this->methods)) {
+      return FieldOptions::build($this);
+    }
+    return $options;
+  }
+
+  public function getQueryValue() {
+    $value = 'uid';
+    if($this->options == 'query') {
+      preg_match('/{{(.*)}}/', $this->query['value'], $matches);
+      $value = $matches[1];
+    }
+    return $value;
+  }
+
+
+  public function getParent() {
+    $options = $this->options;
+    $value = $this->page();
+    if($options == 'query') {
+      $value = page($this->query['page']);
+    }
+    if(in_array($options, $this->methods)) {
+      if(in_array($options, ['children', 'visibleChildren', 'invisibleChildren'])) {
+        $value = $this->page();
+      } else {
+        $value = $this->page()->parent();
+      }
+    }
+    return $value;
   }
 
   public function getFormfields() {
@@ -44,6 +75,7 @@ class SelectplusField extends BaseField {
   }
 
   public function option($value, $text, $selected = false) {
+
     return new Brick('option', $this->i18n($text), array(
       'value'    => $value,
       'selected' => $selected
@@ -199,7 +231,8 @@ class SelectplusField extends BaseField {
         $htmlLabel->append(new Brick('abbr', '*',['title' => 'Required']));
       }
       $input = new Brick('input');
-      $input->attr('name', $name);
+      // prefix form fields to avoid duplicate field name issues
+      $input->attr('name', c::get('selectplus.prefix', 'plus_').$name);
       $input->attr('data-required', $required);
       $input->attr('data-message', $this->getMessage('field.required', [$label]));
       $input->attr('data-focus', 'true');
@@ -224,44 +257,54 @@ class SelectplusField extends BaseField {
   }
 
 
-  public function createPage($data, $parent) {
+  public function createPage($data) {
 
     $site = kirby()->site();
-    $page = page($parent);
-    $data = array_slice($data, 0, count($data)-2);
+    $parent = $this->getParent();
+    $data = array_slice($data, 0, -1);
+
 
     // get page data
     $title = esc(array_values($data)[0]);
 
+    if(is_a($parent, 'Page')) {
+
+      try {
+        $newPage = $parent->children()->create(str::slug($title), $this->getTemplate(), $data);
 
 
-    try {
+        // trigger panel.page.create event
+        kirby()->trigger('panel.page.create', $newPage);
+        $id = $this->getQueryValue();
+        $response = array(
+          'message' => $this->getMessage('success.message'),
+          'class' => 'success',
+          'title' => $title,
+          'uid' => $newPage->{$id}()
+        );
 
-      $newPage = $page->children()->create(str::slug($title), $this->getTemplate(), $data);
+      } catch(Exception $e) {
 
+        $response = array(
+          'message' => $e->getMessage(),
+          'class' => 'error'
+        );
 
-      // trigger panel.page.create event
-      kirby()->trigger('panel.page.create', $newPage);
+      }
+    } else {
 
       $response = array(
-        'message' => $this->getMessage('success.message'),
-        'class' => 'success',
-        'title' => $title,
-        'uid' => $newPage->uid()
-      );
-
-    } catch(Exception $e) {
-
-      $response = array(
-        'message' => $e->getMessage(),
+        'message' => $this->getMessage('error.nopage'),
         'class' => 'error'
       );
 
     }
 
 
+
     return $response;
   }
+
   function translate($string) {
 
     $translation = c::get('selectplus.translation', false);
@@ -293,6 +336,8 @@ class SelectplusField extends BaseField {
     return array_key_exists($this->value(), $this->options());
   }
 
+
+
   public function routes() {
     return [
       [
@@ -300,8 +345,13 @@ class SelectplusField extends BaseField {
         'method' => 'POST',
         'action'  => function() {
           $data = kirby()->request()->data();
-          $response = $this->createPage($data, $this->parent);
-
+          // remove prefix from data keys
+          $newData = array_map_assoc(function($k, $v) {
+             return [
+                str_replace(c::get('selectplus.prefix', 'plus_'), '', $k) => $v
+             ];
+          }, $data);
+          $response = $this->createPage($newData);
           return json_encode($response);
 
         }

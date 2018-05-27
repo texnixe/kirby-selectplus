@@ -48,11 +48,11 @@
     fields.each(function() {
       item[$( this ).attr('name')] = $(this).val();
     });
-
     var blueprintFieldname = $('.selectplus-field').data('fieldname');
     var selectbox = $('.selectplus-field').find('select');
     var baseURL = window.location.href.replace(/(\/edit.*)/g, '/field') + '/' + blueprintFieldname + '/' + fieldname;
     var messageBox = $('.selectplus-message');
+    var form = $(form);
 
     var data = item;
     $.ajax({
@@ -62,11 +62,15 @@
       data: data,
       dataType: "json",
       success: function(response) {
+        console.log(fields);
         messageBox.append(response.message).addClass(response.class);
 
         if(response.class == 'success') {
 
           selectbox.append('<option value="'+response.uid+'" selected>'+response.title+'</option>');
+          selectbox.trigger('change');
+          selectbox.closest(form).trigger('keep');
+
 
           setTimeout(function(){
             selectfield.fadeIn(200);
