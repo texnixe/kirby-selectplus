@@ -67,7 +67,6 @@ locations:
         placeholder:
           en: Address
           de: Adresse
-    parent: locations
     template: location
     width: 1/3
     options: query
@@ -78,16 +77,38 @@ locations:
       text: '{{title}}'
  ```
 
-### Formfields option
+### Template
+
+If no template option is given, the new page is created with the default template.
+
+### Formfields
 
 The formfields option accepts a set of fields that you want to have in your form. For each form field, you can set a label, a placeholder and a required attribute. Each field is a standard text input field. While you can create as many fields as you want, one or two should actually be sufficient to create a new option on the fly.
 
-### Parent
-The name of the parent page where the options will be created. The page must exist.
+** Warning **
+
+### Options
+
+Options can be of type query or an option keyword. The following option keywords or fetch values are allowed:
+
+- children
+- visibleChildren
+- invisibleChildren
+- siblings
+- visibleSiblings
+- invisibleSiblings
 
 ### Options query text
 
-The field you show as text for the select option should be a required field in your formfields options, otherwise your select field option will show an empty string, usually, this will be the title.
+The field you use in the query `text` option should be a required field in your formfields options, otherwise your select field options will be empty strings. Usually, the required field should be the title field.
+
+## Config options
+
+You can set a custom field prefix in your config.php. The default is `plus_`.
+
+```
+c::set('selectplus.prefix', 'plus_');
+```
 
 ## Disclaimer
 
@@ -96,7 +117,19 @@ This plugin is provided "as is" with no guarantee. Use it at your own risk and a
 
 ## Changelog
 
-1.2.0 Fixed an issue where the page could not be saved using the save button due to required fields.
+### 1.3.0
+
+- Change how options are created
+- Remove parent option, the parent is now fetched from the query
+- Allow both query options and option keywords
+- Prefix fields to avoid issues with duplicate field names in form and selectplus form fields, prefix can be set in config.php
+- Fix some issues
+- Updated Readme
+
+### 1.2.0
+
+Fixed an issue where the page could not be saved using the save button due to required fields.
+
 
 ## License
 
